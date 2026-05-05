@@ -16,13 +16,15 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
-          RAW_IP=$(terraform output -raw public_ip | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
-          echo "PUBLIC_IP=$RAW_IP" >> $GITHUB_ENV
+          # We save the IP to a physical file instead of a variable
+          terraform output -raw public_ip > ip_address.txt
 
       - name: Ansible Deploy
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
-          sleep 30
-          scp -i key.pem -o StrictHostKeyChecking=no index.html ubuntu@${{ env.PUBLIC_IP }}:/home/ubuntu/
-          ansible-playbook -i "${{ env.PUBLIC_IP }}," --private-key key.pem -u ubuntu playbook.yml
+          # We read the IP back from that file
+          CONF_IP=$(cat ip_address.txt)
+          echo "Connecting to: $CONF_IP"
+          sleep 60
+          ansible-playbook -i "$CONF_IP," --private-key key.pem -u ubuntu playbook.yml
