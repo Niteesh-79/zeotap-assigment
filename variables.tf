@@ -1,5 +1,5 @@
 variable "region" {
-  default = "af-south-1"
+  default = "us-east-1"
 }
 variable "key_name" {
   default = "zeotap-key" 
