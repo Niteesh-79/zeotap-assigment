@@ -2,6 +2,21 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical's AWS Account ID
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 resource "aws_security_group" "sre_sg" {
   name        = "zeotap_sg"
   description = "Allow HTTP and SSH"
@@ -29,12 +44,12 @@ resource "aws_security_group" "sre_sg" {
 }
 
 resource "aws_instance" "web_server" {
-  ami           = "ami-0c7217cdde317cfec" 
+  ami           = data.aws_ami.ubuntu.id  
   instance_type = "t3.micro"
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.sre_sg.id]
 
-  tags = { Name = "Zeotap-Assignment" }
+  tags = { Name = "Zeotap-Server" }
 }
 
 output "public_ip" {
