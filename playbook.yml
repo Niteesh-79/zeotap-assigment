@@ -8,6 +8,14 @@
         state: present
         update_cache: yes
 
+    - name: Create index.html on the server
+      copy:
+        content: "<h1>Zeotap Deployment Successful!</h1>"
+        dest: /home/ubuntu/index.html
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
     - name: Run Nginx Container
       community.docker.docker_container:
         name: zeotap-web
