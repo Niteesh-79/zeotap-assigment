@@ -29,4 +29,4 @@ jobs:
           echo "Connecting to: $CLEAN_IP"
           sleep 60
           
-          ansible-playbook -i "$CLEAN_IP," | --private-key key.pem |-u ubuntu |--ssh-common-args='-o StrictHostKeyChecking=no' |playbook.yml
+          ansible-playbook -i "$CLEAN_IP," --private-key key.pem -u ubuntu --ssh-common-args='-o StrictHostKeyChecking=no' playbook.yml
