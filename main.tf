@@ -18,7 +18,7 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_security_group" "sre_sg" {
-  name        = "zeotap_sg"
+  name_prefix = "zeotap_sg"
   description = "Allow HTTP and SSH"
 
   ingress {
