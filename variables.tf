@@ -1,6 +1,6 @@
 cat <<EOF > variables.tf
 variable "region" {
-  default = "us-east-1"
+  default = "af-south-1"
 }
 variable "key_name" {
   default = "zeotap-key" 
