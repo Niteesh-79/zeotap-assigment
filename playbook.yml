@@ -1,0 +1,21 @@
+cat <<EOF > playbook.yml
+---
+- name: Setup Docker and Nginx
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Run Nginx Container
+      community.docker.docker_container:
+        name: zeotap-web
+        image: nginx:alpine
+        ports:
+          - "80:80"
+        volumes:
+          - /home/ubuntu/index.html:/usr/share/nginx/html/index.html
+EOF
