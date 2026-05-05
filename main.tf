@@ -1,4 +1,3 @@
-cat <<EOF > main.tf
 provider "aws" {
   region = var.region
 }
@@ -41,4 +40,3 @@ resource "aws_instance" "web_server" {
 output "public_ip" {
   value = aws_instance.web_server.public_ip
 }
-EOF
