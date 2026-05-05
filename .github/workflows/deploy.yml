@@ -24,4 +24,3 @@ jobs:
           sleep 30
           scp -i key.pem -o StrictHostKeyChecking=no index.html ubuntu@\${{ env.PUBLIC_IP }}:/home/ubuntu/
           ansible-playbook -i "\${{ env.PUBLIC_IP }}," --private-key key.pem -u ubuntu playbook.yml
-EOF
