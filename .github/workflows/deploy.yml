@@ -1,4 +1,3 @@
-cat <<EOF > .github/workflows/deploy.yml
 name: Zeotap SRE Deploy
 on: [push]
 
