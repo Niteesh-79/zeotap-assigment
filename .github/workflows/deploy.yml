@@ -26,7 +26,7 @@ jobs:
           
           CLEAN_IP=$(terraform output -raw public_ip | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
           
-          echo "Targeting IP: $CLEAN_IP"
+          echo "Connecting to: $CLEAN_IP"
           sleep 60
           
-          ansible-playbook -i "$CLEAN_IP," --private-key key.pem -u ubuntu playbook.yml
+          ansible-playbook -i "$CLEAN_IP," | --private-key key.pem |-u ubuntu |--ssh-common-args='-o StrictHostKeyChecking=no' |playbook.yml

@@ -46,7 +46,7 @@ resource "aws_security_group" "sre_sg" {
 resource "aws_instance" "web_server" {
   ami           = data.aws_ami.ubuntu.id  
   instance_type = "t3.micro"
-  key_name      = var.key_name
+  key_name      = "zeotap-key"
   vpc_security_group_ids = [aws_security_group.sre_sg.id]
 
   tags = { Name = "Zeotap-Server" }
