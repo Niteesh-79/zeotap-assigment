@@ -9,18 +9,20 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Apply
+        id: apply
         env:
-          AWS_ACCESS_KEY_ID: \${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           terraform init
           terraform apply -auto-approve
-          echo "PUBLIC_IP=\$(terraform output -raw public_ip)" >> \$GITHUB_ENV
+          RAW_IP=$(terraform output -raw public_ip | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "PUBLIC_IP=$RAW_IP" >> $GITHUB_ENV
 
       - name: Ansible Deploy
         run: |
-          echo "\${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
           sleep 30
-          scp -i key.pem -o StrictHostKeyChecking=no index.html ubuntu@\${{ env.PUBLIC_IP }}:/home/ubuntu/
-          ansible-playbook -i "\${{ env.PUBLIC_IP }}," --private-key key.pem -u ubuntu playbook.yml
+          scp -i key.pem -o StrictHostKeyChecking=no index.html ubuntu@${{ env.PUBLIC_IP }}:/home/ubuntu/
+          ansible-playbook -i "${{ env.PUBLIC_IP }}," --private-key key.pem -u ubuntu playbook.yml
